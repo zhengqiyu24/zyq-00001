@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>车辆状态监控面板</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <div class="toast-container" id="toastContainer"></div>
+        <header class="header">
+            <div class="header-left">
+                <h1>车辆状态监控面板</h1>
+                <span class="system-status online">系统在线</span>
+            </div>
+            <div class="header-right">
+                <span class="current-time" id="currentTime"></span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="vehicle-info-card">
+                <div class="card-header">
+                    <h2>车辆基本信息</h2>
+                </div>
+                <div class="vehicle-info-grid">
+                    <div class="info-item">
+                        <span class="label">车牌号</span>
+                        <span class="value" id="plateNumber">京A12345</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">车辆型号</span>
+                        <span class="value" id="vehicleModel">Model X</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">VIN码</span>
+                        <span class="value" id="vin">LSGBL5333KF123456</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">总里程</span>
+                        <span class="value" id="totalMileage">12,580 km</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="status-grid">
+                <div class="status-card">
+                    <div class="card-header">
+                        <h2>挡位状态</h2>
+                    </div>
+                    <div class="gear-display" id="gearDisplay">
+                        <div class="gear-indicator" data-gear="P">P</div>
+                        <div class="gear-indicator" data-gear="R">R</div>
+                        <div class="gear-indicator" data-gear="N">N</div>
+                        <div class="gear-indicator" data-gear="D">D</div>
+                    </div>
+                    <div class="current-gear" id="currentGear">P</div>
+                    <div class="gear-controls">
+                        <button class="control-btn" data-action="shift-p">挂 P 挡</button>
+                        <button class="control-btn" data-action="shift-r">挂 R 挡</button>
+                        <button class="control-btn" data-action="shift-n">挂 N 挡</button>
+                        <button class="control-btn" data-action="shift-d">挂 D 挡</button>
+                    </div>
+                </div>
+
+                <div class="status-card">
+                    <div class="card-header">
+                        <h2>电子手刹</h2>
+                    </div>
+                    <div class="brake-display" id="brakeDisplay">
+                        <div class="brake-icon" id="brakeIcon">🛑</div>
+                        <div class="brake-status" id="brakeStatus">释放</div>
+                    </div>
+                    <div class="brake-controls">
+                        <button class="control-btn" data-action="brake-pull">拉起手刹</button>
+                        <button class="control-btn" data-action="brake-release">释放手刹</button>
+                    </div>
+                </div>
+
+                <div class="status-card">
+                    <div class="card-header">
+                        <h2>自动驻车</h2>
+                    </div>
+                    <div class="auto-hold-display" id="autoHoldDisplay">
+                        <div class="auto-hold-icon" id="autoHoldIcon">🔄</div>
+                        <div class="auto-hold-status" id="autoHoldStatus">关闭</div>
+                    </div>
+                    <div class="auto-hold-controls">
+                        <button class="toggle-btn" data-action="auto-hold-toggle">
+                            <span class="toggle-slider" id="autoHoldSlider"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="status-card">
+                    <div class="card-header">
+                        <h2>锁车状态</h2>
+                    </div>
+                    <div class="lock-display" id="lockDisplay">
+                        <div class="lock-icon" id="lockIcon">🔓</div>
+                        <div class="lock-status" id="lockStatus">解锁</div>
+                    </div>
+                    <div class="lock-controls">
+                        <button class="control-btn" data-action="lock">锁车</button>
+                        <button class="control-btn" data-action="unlock">解锁</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="range-card">
+                <div class="card-header">
+                    <h2>续航状态</h2>
+                </div>
+                <div class="range-content">
+                    <div class="range-gauge">
+                        <div class="gauge-ring">
+                            <svg viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#e0e0e0" stroke-width="8" />
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#4caf50" stroke-width="8" 
+                                        stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="0"
+                                        id="rangeProgress" />
+                            </svg>
+                            <div class="gauge-center">
+                                <span class="gauge-value" id="rangeValue">420</span>
+                                <span class="gauge-unit">km</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="range-details">
+                        <div class="detail-row">
+                            <span class="label">电池电量</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="batteryProgress"></div>
+                            </div>
+                            <span class="value" id="batteryLevel">85%</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">平均能耗</span>
+                            <span class="value" id="avgConsumption">18.5 kWh/100km</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">剩余电量</span>
+                            <span class="value" id="remainingPower">68 kWh</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">总电量</span>
+                            <span class="value" id="totalPower">80 kWh</span>
+                        </div>
+                        <div class="detail-row">
+                            <button class="control-btn simulate-btn" data-action="simulate-driving">🚗 模拟行驶</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="log-card">
+                <div class="card-header">
+                    <h2>操作日志</h2>
+                    <span class="log-count">共 <span id="logCount">0</span> 条记录</span>
+                </div>
+                <div class="log-container" id="logContainer">
+                    <div class="empty-log">暂无操作记录</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="data/vehicle-state.js"></script>
+    <script src="logic/vehicle-logic.js"></script>
+    <script src="render/renderer.js"></script>
+    <script src="event/event-binder.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>

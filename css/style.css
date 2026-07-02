@@ -1,0 +1,580 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+    color: #fff;
+}
+
+.dashboard {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.header-left h1 {
+    font-size: 28px;
+    font-weight: 600;
+    background: linear-gradient(90deg, #00d4ff, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.system-status {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+.system-status.online {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4caf50;
+}
+
+.current-time {
+    font-size: 16px;
+    color: #a0aec0;
+    font-family: 'Courier New', monospace;
+}
+
+.main-content {
+    display: grid;
+    gap: 20px;
+}
+
+.vehicle-info-card,
+.status-card,
+.range-card,
+.log-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-header h2 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #e2e8f0;
+}
+
+.vehicle-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.info-item .label {
+    font-size: 14px;
+    color: #718096;
+}
+
+.info-item .value {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.status-card {
+    text-align: center;
+}
+
+.gear-display {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.gear-indicator {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: #718096;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.gear-indicator:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.gear-indicator.active {
+    background: linear-gradient(135deg, #00d4ff, #7c3aed);
+    color: #fff;
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+.current-gear {
+    font-size: 48px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.gear-controls {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.control-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.control-btn:hover {
+    background: rgba(0, 212, 255, 0.3);
+    color: #00d4ff;
+}
+
+.control-btn:active {
+    transform: scale(0.95);
+}
+
+.brake-display,
+.auto-hold-display,
+.lock-display {
+    margin-bottom: 20px;
+}
+
+.brake-icon,
+.auto-hold-icon,
+.lock-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    transition: all 0.3s ease;
+}
+
+.brake-icon.active {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 0 30px rgba(239, 68, 68, 0.5);
+}
+
+.auto-hold-icon.active {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.5);
+}
+
+.lock-icon.locked {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+}
+
+.lock-icon.unlocked {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.brake-status,
+.auto-hold-status,
+.lock-status {
+    font-size: 24px;
+    font-weight: 600;
+    color: #718096;
+    transition: all 0.3s ease;
+}
+
+.brake-status.active {
+    color: #ef4444;
+}
+
+.auto-hold-status.active {
+    color: #f59e0b;
+}
+
+.lock-status.locked {
+    color: #3b82f6;
+}
+
+.brake-controls,
+.lock-controls {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.auto-hold-controls {
+    display: flex;
+    justify-content: center;
+}
+
+.toggle-btn {
+    width: 80px;
+    height: 40px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #718096;
+    transition: all 0.3s ease;
+}
+
+.toggle-slider.active {
+    left: 44px;
+    background: #f59e0b;
+}
+
+.range-card {
+    grid-column: 1 / -1;
+}
+
+.range-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+}
+
+.range-gauge {
+    display: flex;
+    justify-content: center;
+}
+
+.gauge-ring {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.gauge-ring svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.gauge-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.gauge-value {
+    display: block;
+    font-size: 48px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.gauge-unit {
+    font-size: 16px;
+    color: #718096;
+}
+
+.range-details {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.detail-row .label {
+    width: 100px;
+    font-size: 14px;
+    color: #718096;
+}
+
+.detail-row .value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    min-width: 100px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease, background-color 0.3s ease;
+}
+
+.log-card {
+    grid-column: 1 / -1;
+}
+
+.log-count {
+    font-size: 14px;
+    color: #718096;
+}
+
+.log-container {
+    max-height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.log-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.log-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+.log-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.empty-log {
+    text-align: center;
+    color: #718096;
+    padding: 40px;
+}
+
+.log-item {
+    display: flex;
+    gap: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.log-item.success {
+    border-left-color: #4caf50;
+}
+
+.log-item.failure {
+    border-left-color: #f44336;
+}
+
+.log-time {
+    font-size: 12px;
+    color: #718096;
+    font-family: 'Courier New', monospace;
+    min-width: 170px;
+}
+
+.log-action {
+    font-size: 14px;
+    font-weight: 500;
+    color: #e2e8f0;
+    min-width: 80px;
+}
+
+.log-result {
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 50px;
+}
+
+.log-result.success {
+    color: #4caf50;
+}
+
+.log-result.failure {
+    color: #f44336;
+}
+
+.log-reason {
+    font-size: 14px;
+    color: #a0aec0;
+    flex: 1;
+}
+
+.simulate-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    background: linear-gradient(135deg, #00d4ff, #7c3aed);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.simulate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 212, 255, 0.4);
+}
+
+.simulate-btn:active {
+    transform: translateY(0);
+}
+
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease;
+}
+
+.toast.error {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff;
+}
+
+.toast.success {
+    background: linear-gradient(135deg, #4caf50, #22c55e);
+    color: #fff;
+}
+
+.toast.fade-out {
+    animation: fadeOut 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .vehicle-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .status-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gear-controls {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .range-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .log-item {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .log-time,
+    .log-action,
+    .log-result {
+        min-width: auto;
+    }
+}
