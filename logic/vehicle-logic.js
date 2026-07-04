@@ -158,9 +158,25 @@
             return { valid: false, reason: '未挂入D挡，无法模拟行驶' };
         }
 
+        if (currentState.remainingPower <= 0) {
+            return { valid: false, reason: '电量已耗尽，无法继续行驶' };
+        }
+
         const distance = Math.round(Math.random() * 5 + 1);
         const powerConsumed = (distance / 100) * currentState.avgConsumption;
         
+        if (powerConsumed > currentState.remainingPower) {
+            const maxDistance = Math.round((currentState.remainingPower / currentState.avgConsumption) * 100);
+            const actualPower = currentState.remainingPower;
+            addLog('模拟行驶', '成功', `行驶${maxDistance}km，电量已耗尽`);
+            return {
+                valid: true,
+                reason: `行驶${maxDistance}km，电量已耗尽`,
+                distance: maxDistance,
+                powerConsumed: actualPower
+            };
+        }
+
         addLog('模拟行驶', '成功', `行驶${distance}km，消耗电量${powerConsumed.toFixed(2)}kWh`);
         
         return {
