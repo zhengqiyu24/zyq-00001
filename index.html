@@ -7,7 +7,31 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="dashboard">
+    <div class="login-page" id="loginPage">
+        <div class="login-container">
+            <div class="login-logo">🚗</div>
+            <h1>车辆状态监控系统</h1>
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" placeholder="请输入用户名" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" placeholder="请输入密码" required>
+                    <span class="password-toggle" id="passwordToggle">👁️</span>
+                </div>
+                <div class="form-group remember-me">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">记住密码</label>
+                </div>
+                <button type="submit" class="login-btn">登录</button>
+            </form>
+            <p class="login-tip">默认用户名：admin，密码：123456</p>
+        </div>
+    </div>
+
+    <div class="dashboard" id="dashboard" style="display: none;">
         <div class="toast-container" id="toastContainer"></div>
         <header class="header">
             <div class="header-left">
@@ -164,6 +188,7 @@
                 </div>
             </div>
         </main>
+        <button class="logout-btn" id="logoutBtn">🔒 退出登录</button>
     </div>
 
     <script src="data/vehicle-state.js"></script>

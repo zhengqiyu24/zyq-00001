@@ -1,11 +1,16 @@
 /**
  * Entry Point - Initialize Four Layers and Connect Data Flow
- * 入口文件：初始化四层并建立数据流
+ * 入口文件：初始化四层并建立数据流，包含登录验证
  */
 
 (function(window) {
+    const LOGIN_STATE_KEY = 'vehicle_monitor_login';
+    const REMEMBER_ME_KEY = 'vehicle_monitor_remember';
+
     function showToast(message, type = 'error') {
         const container = document.getElementById('toastContainer');
+        if (!container) return;
+        
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         toast.textContent = message;
@@ -20,7 +25,113 @@
         }, 3000);
     }
 
-    function init() {
+    function showLoginPage() {
+        document.getElementById('loginPage').style.display = 'flex';
+        document.getElementById('dashboard').style.display = 'none';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function showDashboard() {
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        document.body.style.overflow = 'auto';
+    }
+
+    function checkLoginState() {
+        const loginState = localStorage.getItem(LOGIN_STATE_KEY);
+        if (loginState) {
+            try {
+                const state = JSON.parse(loginState);
+                if (state.issuedAt && Date.now() - state.issuedAt < 86400000) {
+                    return true;
+                }
+            } catch (e) {
+                localStorage.removeItem(LOGIN_STATE_KEY);
+            }
+        }
+        return false;
+    }
+
+    function saveLoginState(username) {
+        localStorage.setItem(LOGIN_STATE_KEY, JSON.stringify({
+            username,
+            issuedAt: Date.now()
+        }));
+    }
+
+    function clearLoginState() {
+        localStorage.removeItem(LOGIN_STATE_KEY);
+    }
+
+    function saveRememberMe(username, password) {
+        localStorage.setItem(REMEMBER_ME_KEY, JSON.stringify({
+            username,
+            password
+        }));
+    }
+
+    function getRememberMe() {
+        const data = localStorage.getItem(REMEMBER_ME_KEY);
+        return data ? JSON.parse(data) : null;
+    }
+
+    function clearRememberMe() {
+        localStorage.removeItem(REMEMBER_ME_KEY);
+    }
+
+    function validateLogin(username, password) {
+        return username === 'admin' && password === '123456';
+    }
+
+    function initLogin() {
+        const form = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const rememberMeInput = document.getElementById('rememberMe');
+        const passwordToggle = document.getElementById('passwordToggle');
+
+        const remembered = getRememberMe();
+        if (remembered) {
+            usernameInput.value = remembered.username;
+            passwordInput.value = remembered.password;
+            rememberMeInput.checked = true;
+        }
+
+        passwordToggle.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            passwordToggle.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!username || !password) {
+                showToast('请输入用户名和密码');
+                return;
+            }
+
+            if (validateLogin(username, password)) {
+                saveLoginState(username);
+                
+                if (rememberMeInput.checked) {
+                    saveRememberMe(username, password);
+                } else {
+                    clearRememberMe();
+                }
+
+                showDashboard();
+                initDashboard();
+            } else {
+                showToast('用户名或密码错误');
+            }
+        });
+    }
+
+    function initDashboard() {
         const state = VehicleStateData.getState();
         const logs = VehicleLogic.getLogs();
         
@@ -122,6 +233,11 @@
             VehicleRenderer.render(currentState, currentLogs);
         }
 
+        function handleLogout() {
+            clearLoginState();
+            showLoginPage();
+        }
+
         VehicleStateData.subscribe(render);
 
         VehicleEventBinder.bindEvents({
@@ -144,6 +260,9 @@
             onSimulateDriving: handleSimulateDriving
         });
 
+        const logoutBtn = document.getElementById('logoutBtn');
+        logoutBtn.addEventListener('click', handleLogout);
+
         const drivingInterval = setInterval(() => {
             const currentState = VehicleStateData.getState();
             if (currentState.gear === 'D') {
@@ -154,6 +273,15 @@
         window.addEventListener('beforeunload', () => {
             clearInterval(drivingInterval);
         });
+    }
+
+    function init() {
+        if (checkLoginState()) {
+            showDashboard();
+            initDashboard();
+        } else {
+            initLogin();
+        }
     }
 
     if (document.readyState === 'loading') {
